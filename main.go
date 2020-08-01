@@ -1,12 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+	"io"
+	"net"
+	"os"
 )
 
 func main() {
-	var builder strings.Builder
-	builder.Write([]byte("strings.Builder example\n"))
-	fmt.Println(builder.String())
+	conn, err := net.Dial("tcp", "ascii.jp:80")
+	if err != nil {
+		panic(err)
+	}
+	io.WriteString(conn, "GET / HTTP/1.0\r\nhost: ascii.jp\r\n\r\n")
+	io.Copy(os.Stdout, conn)
 }
