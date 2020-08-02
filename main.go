@@ -1,15 +1,20 @@
 package main
 
 import (
-	"fmt"
+	"encoding/csv"
+	"io"
 	"os"
 )
 
 func main() {
-	file, err := os.Create("formated.txt")
+	file, err := os.Create("test.csv")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Fprintf(file, "No.%d %s weights %f kg\n", 1, "Bob", 65.3)
-	file.Close()
+	multiWriter := io.MultiWriter(file, os.Stdout)
+	writer := csv.NewWriter(multiWriter)
+	writer.WriteAll([][]string{
+		{"first_name", "last_name"},
+		{"Rob", "Thompson"},
+	})
 }
