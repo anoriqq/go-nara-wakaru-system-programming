@@ -1,15 +1,15 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 	"os"
 )
 
 func main() {
-	request, err := http.NewRequest("GET", "http://ascii.jp", nil)
+	file, err := os.Create("formated.txt")
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("X-TEST", "ヘッダーも追加できます")
-	request.Write(os.Stdout)
+	fmt.Fprintf(file, "No.%d %s weights %f kg\n", 1, "Bob", 65.3)
+	file.Close()
 }
