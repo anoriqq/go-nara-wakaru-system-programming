@@ -1,20 +1,31 @@
 package main
 
 import (
-	"encoding/csv"
+	"compress/gzip"
+	"encoding/json"
 	"io"
+	"net/http"
 	"os"
 )
 
-func main() {
-	file, err := os.Create("test.csv")
-	if err != nil {
-		panic(err)
+func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Encoding", "gzip")
+	w.Header().Set("Content-Type", "application/json")
+
+	// json化する元のデータ
+	source := map[string]string{
+		"Hello": "World",
 	}
-	multiWriter := io.MultiWriter(file, os.Stdout)
-	writer := csv.NewWriter(multiWriter)
-	writer.WriteAll([][]string{
-		{"first_name", "last_name"},
-		{"Rob", "Thompson"},
-	})
+
+	gzipWriter := gzip.NewWriter(w)
+	writer := io.MultiWriter(gzipWriter, os.Stdout)
+	encoder := json.NewEncoder(writer)
+	encoder.SetIndent("", "    ")
+	encoder.Encode(source)
+	gzipWriter.Flush()
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }
