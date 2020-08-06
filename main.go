@@ -1,24 +1,13 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"io"
-	"net"
-	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "ascii.jp:80")
-	if err != nil {
-		panic(err)
-	}
-	conn.Write([]byte("GET / HTTP/1.0\r\nHost: ascii.jp\r\n\r\n"))
-	res, err := http.ReadResponse(bufio.NewReader(conn), nil)
-	// ヘッダーを表示してみる
-	fmt.Println(res.Header)
-	// ボディーを表示してみる。最後にはClose()すること
-	defer res.Body.Close()
-	io.Copy(os.Stdout, res.Body)
+	reader := strings.NewReader("Example of io.SectionReader\n")
+	sectionReader := io.NewSectionReader(reader, 14, 7)
+	io.Copy(os.Stdout, sectionReader)
 }
