@@ -1,31 +1,19 @@
 package main
 
 import (
-	"compress/gzip"
-	"encoding/json"
+	"fmt"
 	"io"
-	"net/http"
 	"os"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Encoding", "gzip")
-	w.Header().Set("Content-Type", "application/json")
-
-	// json化する元のデータ
-	source := map[string]string{
-		"Hello": "World",
-	}
-
-	gzipWriter := gzip.NewWriter(w)
-	writer := io.MultiWriter(gzipWriter, os.Stdout)
-	encoder := json.NewEncoder(writer)
-	encoder.SetIndent("", "    ")
-	encoder.Encode(source)
-	gzipWriter.Flush()
-}
-
 func main() {
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	for {
+		buffer := make([]byte, 5)
+		size, err := os.Stdin.Read(buffer)
+		if err == io.EOF {
+			fmt.Println("EOF")
+			break
+		}
+		fmt.Printf("size=%d input='%s'\n", size, string(buffer))
+	}
 }
