@@ -1,18 +1,20 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 )
 
 func main() {
-	var buffer bytes.Buffer
-	reader := bytes.NewBufferString("Example of io.TeeReader\n")
-	teeReader := io.TeeReader(reader, &buffer)
-	// データを読み捨てる
-	_, _ = ioutil.ReadAll(teeReader)
-	// けどバッファに残ってる
-	fmt.Println(buffer.String())
+	file, err := os.Open("old.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	newFile, err := os.Create("new.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer newFile.Close()
+	io.Copy(newFile, file)
 }
