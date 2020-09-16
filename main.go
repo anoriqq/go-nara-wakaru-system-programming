@@ -1,25 +1,15 @@
 package main
 
 import (
-	"archive/zip"
-	"io"
-	"os"
-	"strings"
+	"net/http"
 )
 
+func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Disposition", "attachment; filename=ascii_sample.zip")
+}
+
 func main() {
-	file, err := os.Create("sample.zip")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	zipWriter := zip.NewWriter(file)
-	defer zipWriter.Close()
-
-	writer, err := zipWriter.Create("newfile.txt")
-	if err != nil {
-		panic(err)
-	}
-	io.Copy(writer, strings.NewReader("ファイルのテキスト\n"))
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }
