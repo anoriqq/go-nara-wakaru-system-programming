@@ -1,15 +1,22 @@
 package main
 
 import (
-	"net/http"
+	"bytes"
+	"fmt"
+	"io"
+	"os"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/zip")
-	w.Header().Set("Content-Disposition", "attachment; filename=ascii_sample.zip")
+func copyN(dest io.Writer, src io.Reader, length int) (writeSize int64, err error) {
+	reader := io.LimitReader(src, int64(length))
+	return io.Copy(dest, reader)
 }
 
 func main() {
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	reader := bytes.NewBufferString("exapmle of copyN\n")
+	writeSize, err := io.CopyN(os.Stdout, reader, 4)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(writeSize)
 }
