@@ -1,22 +1,27 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
-func copyN(dest io.Writer, src io.Reader, length int) (writeSize int64, err error) {
-	reader := io.LimitReader(src, int64(length))
-	return io.Copy(dest, reader)
-}
+var (
+	computer    = strings.NewReader("COMPUTER")
+	system      = strings.NewReader("SYSTEM")
+	programming = strings.NewReader("PROGRAMMING")
+)
 
 func main() {
-	reader := bytes.NewBufferString("exapmle of copyN\n")
-	writeSize, err := io.CopyN(os.Stdout, reader, 4)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(writeSize)
+	var stream io.Reader
+
+	// ここに io パッケージを使ったコードを書く
+	a := io.NewSectionReader(programming, 5, 1)
+	s := io.NewSectionReader(system, 0, 1)
+	c := io.NewSectionReader(computer, 0, 1)
+	i1 := io.NewSectionReader(programming, 8, 1)
+	i2 := io.NewSectionReader(programming, 8, 1)
+	stream = io.MultiReader(a, s, c, i1, i2)
+
+	io.Copy(os.Stdout, stream)
 }
