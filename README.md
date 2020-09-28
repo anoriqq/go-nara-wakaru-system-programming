@@ -41,3 +41,5 @@
   - [3.9-Q3.2](https://github.com/anoriqq/go-nara-wakaru-system-programming/tree/3.9-Q3.2)
   - [3.9-Q3.3](https://github.com/anoriqq/go-nara-wakaru-system-programming/tree/3.9-Q3.3)
   - [3.9-Q3.4](https://github.com/anoriqq/go-nara-wakaru-system-programming/tree/3.9-Q3.4)
+  - [3.9-Q3.5](https://github.com/anoriqq/go-nara-wakaru-system-programming/tree/3.9-Q3.5)
+  - [3.9-Q3.6](https://github.com/anoriqq/go-nara-wakaru-system-programming/tree/3.9-Q3.6)
