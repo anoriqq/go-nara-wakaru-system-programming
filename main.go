@@ -5,15 +5,13 @@ import (
 	"time"
 )
 
-func sub() {
-	fmt.Println("sub() is running")
-	time.Sleep(time.Second)
-	fmt.Println("sub() is finished")
-}
-
 func main() {
 	fmt.Println("start sub()")
-	// goroutine をつくって関数を実行
-	go sub()
+	// インラインで無名関数を作ってその場で goroutine で実行
+	go func() {
+		fmt.Println("sub() is running")
+		time.Sleep(time.Second)
+		fmt.Println("sub() is finished")
+	}()
 	time.Sleep(2 * time.Second)
 }
