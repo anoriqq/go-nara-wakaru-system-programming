@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
 	fmt.Println("start sub()")
-	// インラインで無名関数を作ってその場で goroutine で実行
+	// 終了を受け取るためのチャネル
+	done := make(chan bool)
 	go func() {
-		fmt.Println("sub() is running")
-		time.Sleep(time.Second)
 		fmt.Println("sub() is finished")
+		// 終了を通知
+		done <- true
 	}()
-	time.Sleep(2 * time.Second)
+	// 終了を待つ
+	<-done
+	fmt.Println("all tasks are finished")
 }
