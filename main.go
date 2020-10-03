@@ -2,18 +2,35 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
-func main() {
-	fmt.Println("start sub()")
-	// 終了を受け取るためのチャネル
-	done := make(chan bool)
+func primeNumber() chan int {
+	result := make(chan int)
 	go func() {
-		fmt.Println("sub() is finished")
-		// 終了を通知
-		done <- true
+		result <- 2
+		for i := 3; i < 100000; i += 2 {
+			l := int(math.Sqrt(float64(i)))
+			found := false
+			for j := 3; j < l+1; j += 2 {
+				if i%j == 0 {
+					found = true
+					break
+				}
+			}
+			if !found {
+				result <- i
+			}
+		}
+		close(result)
 	}()
-	// 終了を待つ
-	<-done
-	fmt.Println("all tasks are finished")
+	return result
+}
+
+func main() {
+	pn := primeNumber()
+	// ここがポイント
+	for n := range pn {
+		fmt.Println(n)
+	}
 }
